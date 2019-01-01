@@ -36,5 +36,6 @@ Returns data as a line chart. Default value is candlestick chart.
 ##### 5y
 ```Returns 5 year of data for requested stock at 1 month intervals.```
 
-![Screenshot](slack_exmaple.png)
-![Screenshot](chart_exmaple.png)
+
+![Screenshot](slack_example.png)
+![Screenshot](chart_example.png)
