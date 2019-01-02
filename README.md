@@ -15,7 +15,7 @@ EX: /stock AMZN 5d -L
 ### Options:
 ##### -help, help, -h
 ```
-Returns information on options and usage of app. 
+Returns information on options and usage of app. May add -o option to make it visible to all.
 ```
 ##### -T, -t
 ```Returns stock price as text value without chart```
