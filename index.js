@@ -20,7 +20,7 @@ exports.handler = (event, context, callback) => {
       // Return response
       const response = {
           response_type:vis,
-          text: '*Usage:* ```/stock [STOCKNAME] [OPTIONS]\nEX: /stock AMZN 5d -L``` *Options:* \n```-help      Returns information on options and usage of app. \n-L       Returns data as a line chart. Default value is candlestick chart.\n1d      Returns 1 day of data for requested stock at 5 minute intervals. Default value.\n5d      Returns 5 days of data for requested stock at 30 minute intervals.\n1m      Returns 1 month of data for requested stock at 1 day intervals. \n3m      Returns 3 month of data for requested stock at 1 day intervals. \n6m      Returns 6 month of data for requested stock at 1 week intervals. \n1y      Returns 1 year of data for requested stock at 1 week intervals. \n5y      Returns 5 year of data for requested stock at 1 month intervals.```'
+          text: '*Usage:* ```/stock [STOCKNAME] [OPTIONS]\nEX: /stock AMZN 5d -L``` *Options:* \n```-help      Returns information on options and usage of app. \n-T      Returns the current price and difference percentage with no chart.\n-L       Returns data as a line chart. Default value is candlestick chart.\n1d      Returns 1 day of data for requested stock at 5 minute intervals. Default value.\n5d      Returns 5 days of data for requested stock at 30 minute intervals.\n1m      Returns 1 month of data for requested stock at 1 day intervals. \n3m      Returns 3 month of data for requested stock at 1 day intervals. \n6m      Returns 6 month of data for requested stock at 1 week intervals. \n1y      Returns 1 year of data for requested stock at 1 week intervals. \n5y      Returns 5 year of data for requested stock at 1 month intervals.\n\nSource: https://github.com/andrewkvuong/SlackStockBot```'
       };
       callback(null, response);
       return;
@@ -101,7 +101,12 @@ exports.handler = (event, context, callback) => {
                 
                 // Check when to stop
                 let diffDays = Math.round(Math.abs((firstDate - secondDate)/(oneDay)));
-                if(diffDays > days)
+                if(diffDays > days && days != 1)
+                {
+                    prev_close = stock_data[key_name][i]['4. close'];
+                    break;
+                }
+                else if(days == 1 && Object.keys(stock_data[key_name])[0].substring(8, 10) != i.substring(8, 10))
                 {
                     prev_close = stock_data[key_name][i]['4. close'];
                     break;
@@ -159,6 +164,18 @@ exports.handler = (event, context, callback) => {
             let sign = diff < 0 ? '' : '+';
             let percentage = diff*100.00 / prev_close;
             
+            if(events[1] == '-T' || events[2] == '-T' || events[1] == '-t' || events[2] == '-t')
+            {
+                // Return response
+                const response = {
+                    response_type:'in_channel',
+                    text: events[0] + ': $' + Number(close[0]).toFixed(2),
+                    attachments:[{text: sign + Number(diff).toFixed(2) + ' ('+ Number(percentage).toFixed(2) + '%)', fallback: 'fallback', color: color}]
+                };
+                callback(null, response);
+                return;
+            }
+            
             var layout1 = {
               title: "<b>" + events[0] + " - $" + Number(close[0]).toFixed(2)+'</b><br><span style="color: '+ color +'">'+ sign + Number(diff).toFixed(2) + ' ('+ Number(percentage).toFixed(2) + '%)</span></br>',
               titlefont:{
@@ -175,7 +192,7 @@ exports.handler = (event, context, callback) => {
             };
             
             // Create figure
-            var figure = events[1] == '-L' || events[2] == '-L' ? {'data': [trace2], layout: layout1} : {'data': [trace1], layout: layout1};
+            var figure = events[1] == '-L' || events[2] == '-L' || events[1] == '-l' || events[2] == '-l' ? {'data': [trace2], layout: layout1} : {'data': [trace1], layout: layout1};
             
             // Figure options
           	var imgOpts = {
