@@ -39,5 +39,4 @@ Returns data as a line chart. Default value is candlestick chart.
 ```Returns 5 year of data for requested stock at 1 month intervals.```
 
 
-![Screenshot](slack_example.png)
-![Screenshot](chart_example.png)
+![Alt Text](https://github.com/andrewkvuong/SlackStockBot/blob/master/example.gif)
