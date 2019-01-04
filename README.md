@@ -1,6 +1,6 @@
 # SlackStockBot
 
-Slack application to display stock graphs on Slack given a slash command. Stock data is retrieved from Alpha Vantage(https://www.alphavantage.co/) and charts are made with plotly for nodejs.
+Slack application to display stock graphs on Slack given a slash command. Stock data is retrieved from Alpha Vantage(https://www.alphavantage.co/), charts are made with plotly for nodejs, news articles are retrieved from Yahoo Finance.
 
 This application is hosted on AWS using AWS Lambda and AWS Gateway API.
 Currently being hosted at: https://et9xsm27yf.execute-api.us-east-2.amazonaws.com/Test/getstockgraph
