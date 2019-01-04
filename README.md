@@ -19,10 +19,16 @@ Returns information on options and usage of app. May add -o option to make it vi
 ```
 ##### -T, -t
 ```Returns stock price as text value without chart```
-##### -L, -l
+##### -C, -c
 ```
-Returns data as a line chart. Default value is candlestick chart.
+Returns data as a candlestick chart. Default is line chart.
 ```
+##### -V, -v
+```Returns volume for stock in last 5 minutes.```
+##### -daily_volume
+```Returns daily volume for stock```
+##### -news [#]
+```Displays # news articles from Yahoo finance for given stock. # will default to 3 and maxes at 20. Ex: /stock AMZN -news 5```
 ##### 1d, -1d
 ```Returns 1 day of data for requested stock at 5 minute intervals. Default value.```
 ##### 5d, -5d
