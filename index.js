@@ -11,46 +11,6 @@ const h2p = require('html2plaintext');
 exports.handler = (event, context, callback) => {
   // Split parameters
   var events = event.body.text.split(" ");
-  if (events[0] === 'parrotlet') {
-    const response = {
-      response_type: 'in_channel',
-      attachments: [{ title: events[0], title_link: "https://media.giphy.com/media/LKc35qQgttRu0/giphy.gif", image_url: 'https://media.giphy.com/media/LKc35qQgttRu0/giphy.gif', fallback: events[0] }]
-    };
-    callback(null, response);
-    return;
-  }
-  else if (events[0] === 'parrotlet2') {
-    const response = {
-      response_type: 'in_channel',
-      attachments: [{ title: events[0], title_link: "https://media.giphy.com/media/LKc35qQgttRu0/giphy.gif", image_url: 'https://media.giphy.com/media/6RIG50yLoWYUM/giphy.gif', fallback: events[0] }]
-    };
-    callback(null, response);
-    return;
-  }
-  else if (events[0] === 'whale') {
-    const response = {
-      response_type: 'in_channel',
-      attachments: [{ title: events[0], title_link: "https://media.giphy.com/media/LKc35qQgttRu0/giphy.gif", image_url: 'https://media.giphy.com/media/121iTEUa2O49DG/giphy.gif', fallback: events[0] }]
-    };
-    callback(null, response);
-    return;
-  }
-  else if (event.body.text === 'sleeping parrotlet') {
-    const response = {
-      response_type: 'in_channel',
-      attachments: [{ title: event.body.text, title_link: "https://media.giphy.com/media/3o84TVpkrQ4bRa8VeU/giphy.gif", image_url: 'https://media.giphy.com/media/3o84TVpkrQ4bRa8VeU/giphy.gif', fallback: event.body.text }]
-    };
-    callback(null, response);
-    return;
-  }
-  else if (events[0] === 'chinchilla') {
-    const response = {
-      response_type: 'in_channel',
-      attachments: [{ title: events[0], title_link: "https://media.giphy.com/media/3o84TVpkrQ4bRa8VeU/giphy.gif", image_url: 'https://media.giphy.com/media/NLIPqilkyziF2/giphy.gif', fallback: "Required plain-text summary of the attachment." }]
-    };
-    callback(null, response);
-    return;
-  }
 
   // Return if Help
   if (events[1] === '-help' || events[2] === '-help' || events[0] === '-help' || events[1] === 'help' || events[2] === 'help' || events[0] === 'help' || events[1] === '-h' || events[2] === '-h' || events[0] === '-h' || events[0] === '' || events[0] === null) {
