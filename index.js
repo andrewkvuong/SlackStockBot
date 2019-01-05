@@ -11,24 +11,65 @@ const h2p = require('html2plaintext');
 exports.handler = (event, context, callback) => {
   // Split parameters
   var events = event.body.text.split(" ");
+  if (events[0] === 'parrotlet') {
+    const response = {
+      response_type: 'in_channel',
+      attachments: [{ title: events[0], title_link: "https://media.giphy.com/media/LKc35qQgttRu0/giphy.gif", image_url: 'https://media.giphy.com/media/LKc35qQgttRu0/giphy.gif', fallback: events[0] }]
+    };
+    callback(null, response);
+    return;
+  }
+  else if (events[0] === 'parrotlet2') {
+    const response = {
+      response_type: 'in_channel',
+      attachments: [{ title: events[0], title_link: "https://media.giphy.com/media/LKc35qQgttRu0/giphy.gif", image_url: 'https://media.giphy.com/media/6RIG50yLoWYUM/giphy.gif', fallback: events[0] }]
+    };
+    callback(null, response);
+    return;
+  }
+  else if (events[0] === 'whale') {
+    const response = {
+      response_type: 'in_channel',
+      attachments: [{ title: events[0], title_link: "https://media.giphy.com/media/LKc35qQgttRu0/giphy.gif", image_url: 'https://media.giphy.com/media/121iTEUa2O49DG/giphy.gif', fallback: events[0] }]
+    };
+    callback(null, response);
+    return;
+  }
+  else if (event.body.text === 'sleeping parrotlet') {
+    const response = {
+      response_type: 'in_channel',
+      attachments: [{ title: event.body.text, title_link: "https://media.giphy.com/media/3o84TVpkrQ4bRa8VeU/giphy.gif", image_url: 'https://media.giphy.com/media/3o84TVpkrQ4bRa8VeU/giphy.gif', fallback: event.body.text }]
+    };
+    callback(null, response);
+    return;
+  }
+  else if (events[0] === 'chinchilla') {
+    const response = {
+      response_type: 'in_channel',
+      attachments: [{ title: events[0], title_link: "https://media.giphy.com/media/3o84TVpkrQ4bRa8VeU/giphy.gif", image_url: 'https://media.giphy.com/media/NLIPqilkyziF2/giphy.gif', fallback: "Required plain-text summary of the attachment." }]
+    };
+    callback(null, response);
+    return;
+  }
 
   // Return if Help
-  if (events[1] == '-help' || events[2] == '-help' || events[0] == '-help' || events[1] == 'help' || events[2] == 'help' || events[0] == 'help' || events[1] == '-h' || events[2] == '-h' || events[0] == '-h' || events[0] == '' || events[0] == null) {
+  if (events[1] === '-help' || events[2] === '-help' || events[0] === '-help' || events[1] === 'help' || events[2] === 'help' || events[0] === 'help' || events[1] === '-h' || events[2] === '-h' || events[0] === '-h' || events[0] === '' || events[0] === null) {
     var vis = 'ephemeral';
-    if (events[1] == '-o' || events[2] == '-o' || events[0] == '-o') {
+    if (events[1] === '-o' || events[2] === '-o' || events[0] === '-o') {
       vis = 'in_channel';
     }
     // Return response
     const response = {
       response_type: vis,
-      text: '*Usage:* ```/stock [STOCKNAME] [OPTIONS]\nEX: /stock AMZN 5d -L``` *Options:* \n```-help           Returns information on options and usage of app. \n-T              Returns the current price and difference percentage with no chart.\n-C              Returns data as a candlestick chart. Default is line chart.\n-news [#]       Displays # news articles from Yahoo finance for given stock. # will default to 3 and maxes at 20.\n-V              Returns volume for stock in last 5 minutes\n-daily_volume   Returns daily volume for stock.\n1d              Returns 1 day of data for requested stock at 5 minute intervals. Default value.\n5d              Returns 5 days of data for requested stock at 30 minute intervals.\n1m              Returns 1 month of data for requested stock at 1 day intervals. \n3m              Returns 3 month of data for requested stock at 1 day intervals. \n6m              Returns 6 month of data for requested stock at 1 week intervals. \n1y              Returns 1 year of data for requested stock at 1 week intervals. \n5y              Returns 5 year of data for requested stock at 1 month intervals.\n\nSource: https://github.com/andrewkvuong/SlackStockBot```'
+      text: '*Usage:* ```/stock [STOCKNAME] [OPTIONS]\nEX: /stock AMZN 5d -L``` *Options:* \n```-help                   Returns information on options and usage of app. \n[STOCK] -T              Returns the current price and difference percentage with no chart.\n[STOCK] -C              Returns data as a candlestick chart. Default is line chart.\n[STOCK] -news [#]       Displays # news articles from Yahoo finance for given stock. # will default to 3 and maxes at 20.\n-F                      Returns daily values for channel favorite stocks.\n[STOCK] -add            Adds [STOCK] to channel favorite.\n-removeall              Removes all channel favorites\n[STOCK] -V              Returns volume for stock in last 5 minutes\n[STOCK] -daily_volume   Returns daily volume for stock.\n[STOCK] 1d              Returns 1 day of data for requested stock at 5 minute intervals. Default value.\n[STOCK] 5d              Returns 5 days of data for requested stock at 30 minute intervals.\n[STOCK] 1m              Returns 1 month of data for requested stock at 1 day intervals. \n[STOCK] 3m              Returns 3 month of data for requested stock at 1 day intervals. \n[STOCK] 6m              Returns 6 month of data for requested stock at 1 week intervals. \n[STOCK] 1y              Returns 1 year of data for requested stock at 1 week intervals. \n[STOCK] 5y              Returns 5 year of data for requested stock at 1 month intervals.\n\nSource: https://github.com/andrewkvuong/SlackStockBot```'
     };
     callback(null, response);
     return;
   }
 
   events[0] = events[0].toUpperCase();
-  if (events[1] == '-news') {
+  // News
+  if (events[1] === '-news') {
     let count = 3;
     if (events[2] != '' && events[2] != null) {
       if (parseInt(events[2]) > 20) {
@@ -41,36 +82,57 @@ exports.handler = (event, context, callback) => {
     getNews(events[0], count, callback);
     return;
   }
+  
+  if(events[1] === '-add')
+  {
+    addFavorites(event.body.channel_id, events[0], callback);
+    return;
+  }
+  
+  // Favorites
+  if(events[0] === '-f' || events[0] === '-F')
+  {
+    getFavorites(event.body.channel_id, callback);
+    return;
+  }
+  
+  // Remove Favorites
+  if(events[0] === '-REMOVEALL')
+  {
+    removeFavorites(event.body.channel_id, callback);
+    return;
+  }
+  
   // Update URL based on length requested
   let key_name = 'Time Series (5min)';
   var url = 'https://www.alphavantage.co/query?function=TIME_SERIES_INTRADAY&symbol=' + events[0] + '&interval=5min&outputsize=compact&apikey=P7IY8YPEHX9CS9A1';
   let days = 1;
-  if (events[1] == "-5d" || events[2] == "-5d" || events[1] == "5d" || events[2] == "5d") {
+  if (events[1] === "-5d" || events[2] === "-5d" || events[1] === "5d" || events[2] === "5d") {
     days = 8;
     key_name = 'Time Series (30min)';
     url = 'https://www.alphavantage.co/query?function=TIME_SERIES_INTRADAY&symbol=' + events[0] + '&interval=30min&outputsize=compact&apikey=P7IY8YPEHX9CS9A1';
   }
-  else if (events[1] == "-1m" || events[2] == "-1m" || events[1] == "1m" || events[2] == "1m") {
+  else if (events[1] === "-1m" || events[2] === "-1m" || events[1] === "1m" || events[2] === "1m") {
     days = 31;
     key_name = 'Time Series (Daily)';
     url = 'https://www.alphavantage.co/query?function=TIME_SERIES_DAILY&symbol=' + events[0] + '&apikey=P7IY8YPEHX9CS9A1';
   }
-  else if (events[1] == "-3m" || events[2] == "-3m" || events[1] == "3m" || events[2] == "3m") {
+  else if (events[1] === "-3m" || events[2] === "-3m" || events[1] === "3m" || events[2] === "3m") {
     days = 92;
     key_name = 'Time Series (Daily)';
     url = 'https://www.alphavantage.co/query?function=TIME_SERIES_DAILY&symbol=' + events[0] + '&apikey=P7IY8YPEHX9CS9A1';
   }
-  else if (events[1] == "-6m" || events[2] == "-6m" || events[1] == "6m" || events[2] == "6m") {
+  else if (events[1] === "-6m" || events[2] === "-6m" || events[1] === "6m" || events[2] === "6m") {
     days = 187;
     key_name = 'Weekly Time Series';
     url = 'https://www.alphavantage.co/query?function=TIME_SERIES_WEEKLY&symbol=' + events[0] + '&apikey=P7IY8YPEHX9CS9A1';
   }
-  else if (events[1] == "-1y" || events[2] == "-1y" || events[1] == "1y" || events[2] == "1y") {
+  else if (events[1] === "-1y" || events[2] === "-1y" || events[1] === "1y" || events[2] === "1y") {
     days = 372;
     key_name = 'Weekly Time Series';
     url = 'https://www.alphavantage.co/query?function=TIME_SERIES_WEEKLY&symbol=' + events[0] + '&apikey=P7IY8YPEHX9CS9A1';
   }
-  else if (events[1] == "-5y" || events[2] == "-5y" || events[1] == "5y" || events[2] == "5y") {
+  else if (events[1] === "-5y" || events[2] === "-5y" || events[1] === "5y" || events[2] === "5y") {
     days = 1832;
     key_name = 'Monthly Time Series';
     url = 'https://www.alphavantage.co/query?function=TIME_SERIES_MONTHLY&symbol=' + events[0] + '&apikey=P7IY8YPEHX9CS9A1';
@@ -109,7 +171,7 @@ exports.handler = (event, context, callback) => {
         let firstDate = Date.parse(Object.keys(stock_data[key_name])[0]);
         let secondDate = Date.parse(i);
 
-        if (events[1] == '-V' || events[2] == '-V' || events[1] == '-v' || events[2] == '-v') {
+        if (events[1] === '-V' || events[2] === '-V' || events[1] === '-v' || events[2] === '-v') {
           // Return response
           const response = {
             response_type: 'in_channel',
@@ -127,7 +189,7 @@ exports.handler = (event, context, callback) => {
           prev_close = stock_data[key_name][i]['4. close'];
           break;
         }
-        else if (days == 1 && Object.keys(stock_data[key_name])[0].substring(8, 10) != i.substring(8, 10)) {
+        else if (days === 1 && Object.keys(stock_data[key_name])[0].substring(8, 10) != i.substring(8, 10)) {
           prev_close = stock_data[key_name][i]['4. close'];
           break;
         }
@@ -140,7 +202,7 @@ exports.handler = (event, context, callback) => {
         close.push(stock_data[key_name][i]['4. close']);
       }
 
-      if (events[1] == '-daily_volume' || events[2] == '-daily_volume') {
+      if (events[1] === '-daily_volume' || events[2] === '-daily_volume') {
         // Return response
         const response = {
           response_type: 'in_channel',
@@ -197,7 +259,7 @@ exports.handler = (event, context, callback) => {
       // Update axis names. (Must do this due to the way plot.ly handles dates for stock data)
       let x_axis_min = [x_axis[0], x_axis[parseInt(x_axis.length / 3)], x_axis[parseInt(2 * x_axis.length / 3)], x_axis[x_axis.length - 1]];
       let x_text_min = [x_text[0], x_text[parseInt(x_text.length / 3)], x_text[parseInt(2 * x_text.length / 3)], x_text[x_text.length - 1]];
-      if (days == 92) {
+      if (days === 92) {
         x_axis_min = [x_axis[0], x_axis[parseInt(x_axis.length / 2)], x_axis[x_axis.length - 1]];
         x_text_min = [x_text[0], x_text[parseInt(x_text.length / 2)], x_text[x_text.length - 1]];
       }
@@ -213,7 +275,7 @@ exports.handler = (event, context, callback) => {
       let sign = diff < 0 ? '' : '+';
       let percentage = diff * 100.00 / prev_close;
 
-      if (events[1] == '-T' || events[2] == '-T' || events[1] == '-t' || events[2] == '-t') {
+      if (events[1] === '-T' || events[2] === '-T' || events[1] === '-t' || events[2] === '-t') {
         // Return response
         const response = {
           response_type: 'in_channel',
@@ -241,7 +303,7 @@ exports.handler = (event, context, callback) => {
       };
 
       // Create figure
-      var figure = events[1] == '-C' || events[2] == '-C' || events[1] == '-c' || events[2] == '-c' ? { 'data': [trace1, trace3], layout: layout1 } : { 'data': [trace2, trace3], layout: layout1 };
+      var figure = events[1] === '-C' || events[2] === '-C' || events[1] === '-c' || events[2] === '-c' ? { 'data': [trace1, trace3], layout: layout1 } : { 'data': [trace2, trace3], layout: layout1 };
 
       // Figure options
       var imgOpts = {
@@ -304,13 +366,13 @@ function formatDate(date_string, days) {
   month_names['12'] = "Dec";
   let month_name = month_names[month];
 
-  if (days == 1) {
+  if (days === 1) {
     return date_string.substring(11, 16);
   }
-  if (days == 8 || days == 31) {
+  if (days === 8 || days === 31) {
     return month_name + " " + date_string.substring(8, 10);
   }
-  if (days == 92 || days == 187 || days == 372) {
+  if (days === 92 || days === 187 || days === 372) {
     return month_name + " " + date_string.substring(0, 4);
   }
   return date_string.substring(0, 4);
@@ -354,5 +416,128 @@ function getNews(stockName, count, callback) {
     });
   }).on('error', (err) => {
     console.log("Stock Data Request Error", err);
+  });
+}
+
+function removeFavorites(channel_id, callback)
+{
+  let previous_favorites = {Favorites: []};
+  let buffer = JSON.stringify(previous_favorites);
+  let params = { Bucket: "slackbot-stockgraphs", Key: channel_id, Body: buffer};
+  s3.upload(params, (err, data) => {
+    if(err) console.log("Upload error", err);
+  });
+  
+  const response = {
+    response_type: 'in_channel',
+    text: "All favorites removed"
+  };
+  callback(null, response);
+}
+
+function addFavorites(channel_id, stockName, callback)
+{
+  var params = { Bucket: "slackbot-stockgraphs", Key: channel_id};
+  var previous_favorites = {Favorites: []};
+  var URL = "https://www.alphavantage.co/query?function=GLOBAL_QUOTE&symbol=" + stockName + "&apikey=P7IY8YPEHX9CS9A1";
+  https.get(URL, (res) => {
+      var returnData = "";
+      res.on('data', (d) => {
+        returnData += d;
+      });
+  
+      // Work with data
+      res.on('end', function() {
+        let stock_data = JSON.parse(returnData);
+        if(JSON.stringify(stock_data['Global Quote']) === '{}')
+        {
+          const response = {
+            response_type: 'in_channel',
+            text: "Failed to add: " + stockName
+          };
+          callback(null, response);
+          return;
+        }
+        s3.getObject(params, (err, data) => {
+          if(err){
+            console.log("S3 ERROR:", err);
+            previous_favorites.Favorites.push(stockName); 
+            let buffer = JSON.stringify(previous_favorites);
+            params = { Bucket: "slackbot-stockgraphs", Key: channel_id, Body: buffer};
+            s3.upload(params, (err, data) => {
+              if(err) console.log("Upload error", err);
+                const response = {
+                  response_type: 'in_channel',
+                  text: "Favorites updated: " + previous_favorites.Favorites
+                };
+                callback(null, response);
+                return;
+            });
+          }
+          else
+          {
+            previous_favorites = JSON.parse(data.Body.toString());
+            console.log("S3 DATA", data);
+            if(previous_favorites.Favorites.indexOf(stockName) > -1)
+            {
+              return;
+            }
+            previous_favorites.Favorites.push(stockName); 
+            let buffer = JSON.stringify(previous_favorites);
+            params = { Bucket: "slackbot-stockgraphs", Key: channel_id, Body: buffer};
+            s3.upload(params, (err, data) => {
+              if(err) console.log("Upload error", err);
+                const response = {
+                  response_type: 'in_channel',
+                  text: "Favorites updated: " + previous_favorites.Favorites
+                };
+                callback(null, response);
+            });
+          }
+        });
+      });
+  });
+}
+
+function getFavorites(channel_id, callback)
+{
+  var params = { Bucket: "slackbot-stockgraphs", Key: channel_id};
+  let favorites;
+  s3.getObject(params, (err, data) => {
+    if(err) console.log("S3 ERROR:", err);
+    //console.log("DATA",  JSON.parse(data.Body.toString()).Favorites);
+    favorites = JSON.parse(data.Body.toString());
+    
+    var promise_arr = [];
+    for(var i in favorites.Favorites)
+    {
+      console.log("STOCK: ", favorites.Favorites[i]);
+      var URL = "https://www.alphavantage.co/query?function=GLOBAL_QUOTE&symbol=" + favorites.Favorites[i] + "&apikey=P7IY8YPEHX9CS9A1";
+      promise_arr.push(new Promise(function(resolve, reject){
+        https.get(URL, (res) => {
+            var returnData = "";
+            res.on('data', (d) => {
+              returnData += d;
+            });
+        
+            // Work with data
+            res.on('end', function() {
+              let stock_data = JSON.parse(returnData);
+              let color = parseFloat(stock_data['Global Quote']['09. change']) < 0 ? '#F45432' : '#21CE99';
+              let sign = parseFloat(stock_data['Global Quote']['09. change']) < 0 ? '' : '+';
+              let attachment = {title: stock_data['Global Quote']['01. symbol'] + ': $' + stock_data['Global Quote']['05. price'], text: sign + stock_data['Global Quote']['09. change'] + '(' + sign + stock_data['Global Quote']['10. change percent'] +')', color: color, fallback: stock_data['Global Quote']['01. symbol'] + ': $' + stock_data['Global Quote']['05. price']};
+              resolve(attachment);
+            });
+        });
+      }));
+    }
+  
+    Promise.all(promise_arr).then(function(values) {
+      const response = {
+        response_type: 'in_channel',
+        attachments: values
+      };
+      callback(null, response);
+    });
   });
 }

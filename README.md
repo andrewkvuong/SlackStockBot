@@ -12,17 +12,24 @@ Currently being hosted at: https://et9xsm27yf.execute-api.us-east-2.amazonaws.co
 EX: /stock AMZN 5d -L
 ``` 
 
-### Options:
 ##### -help, help, -h
 ```
 Returns information on options and usage of app. May add -o option to make it visible to all.
 ```
+##### -removeall
+```Removes all slack channel favorites```
+##### -f, -F
+```Lists current price and daily change for all slack channel favorites```
+
+### Options:
 ##### -T, -t
 ```Returns stock price as text value without chart```
 ##### -C, -c
 ```
 Returns data as a candlestick chart. Default is line chart.
 ```
+##### -add
+```Adds stock to slack channel favorites```
 ##### -V, -v
 ```Returns volume for stock in last 5 minutes.```
 ##### -daily_volume
