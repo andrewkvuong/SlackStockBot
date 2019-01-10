@@ -341,9 +341,9 @@ function formatDate(date_string, days) {
 function getNews(stockName, count, callback) {
   var attachment_arr = [];
   // http://feeds.finance.yahoo.com/rss/2.0/headline?s=ge&region=US&lang=en-US
-  let newsURL = 'http://feeds.finance.yahoo.com/rss/2.0/headline?s=' + stockName + '&region=US&lang=en-US';
+  let newsURL = 'https://feeds.finance.yahoo.com/rss/2.0/headline?s=' + stockName + '&region=US&lang=en-US';
 
-  http.get(newsURL, (res) => {
+  https.get(newsURL, (res) => {
     console.log('statusCode:', res.statusCode);
     console.log('headers:', res.headers);
 
