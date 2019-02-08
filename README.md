@@ -21,6 +21,9 @@ Returns information on options and usage of app. May add -o option to make it vi
 ##### -f, -F
 ```Lists current price and daily change for all slack channel favorites```
 
+##### -google [QUERY]
+```Performs a google search for [QUERY]```
+
 ### Options:
 ##### -T, -t
 ```Returns stock price as text value without chart```

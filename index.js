@@ -21,7 +21,7 @@ exports.handler = (event, context, callback) => {
     // Return response
     const response = {
       response_type: vis,
-      text: '*Usage:* ```/stock [STOCKNAME] [OPTIONS]\nEX: /stock AMZN 5d -L``` *Options:* \n```-help                   Returns information on options and usage of app. \n[STOCK] -T              Returns the current price and difference percentage with no chart.\n[STOCK] -C              Returns data as a candlestick chart. Default is line chart.\n[STOCK] -news [#]       Displays # news articles from Yahoo finance for given stock. # will default to 3 and maxes at 20.\n-F                      Returns daily values for channel favorite stocks.\n[STOCK] -add            Adds [STOCK] to channel favorite.\n-removeall              Removes all channel favorites\n[STOCK] -V              Returns volume for stock in last 5 minutes\n[STOCK] -daily_volume   Returns daily volume for stock.\n[STOCK] 1d              Returns 1 day of data for requested stock at 5 minute intervals. Default value.\n[STOCK] 5d              Returns 5 days of data for requested stock at 30 minute intervals.\n[STOCK] 1m              Returns 1 month of data for requested stock at 1 day intervals. \n[STOCK] 3m              Returns 3 month of data for requested stock at 1 day intervals. \n[STOCK] 6m              Returns 6 month of data for requested stock at 1 week intervals. \n[STOCK] 1y              Returns 1 year of data for requested stock at 1 week intervals. \n[STOCK] 5y              Returns 5 year of data for requested stock at 1 month intervals.\n\nSource: https://github.com/andrewkvuong/SlackStockBot```'
+      text: '*Usage:* ```/stock [STOCKNAME] [OPTIONS]\nEX: /stock AMZN 5d -L``` *Options:* \n```-help                   Returns information on options and usage of app. \n-google [query]       Performs google search on query\n[STOCK] -T              Returns the current price and difference percentage with no chart.\n[STOCK] -C              Returns data as a candlestick chart. Default is line chart.\n[STOCK] -news [#]       Displays # news articles from Yahoo finance for given stock. # will default to 3 and maxes at 20.\n-F                      Returns daily values for channel favorite stocks.\n[STOCK] -add            Adds [STOCK] to channel favorite.\n-removeall              Removes all channel favorites\n[STOCK] -V              Returns volume for stock in last 5 minutes\n[STOCK] -daily_volume   Returns daily volume for stock.\n[STOCK] 1d              Returns 1 day of data for requested stock at 5 minute intervals. Default value.\n[STOCK] 5d              Returns 5 days of data for requested stock at 30 minute intervals.\n[STOCK] 1m              Returns 1 month of data for requested stock at 1 day intervals. \n[STOCK] 3m              Returns 3 month of data for requested stock at 1 day intervals. \n[STOCK] 6m              Returns 6 month of data for requested stock at 1 week intervals. \n[STOCK] 1y              Returns 1 year of data for requested stock at 1 week intervals. \n[STOCK] 5y              Returns 5 year of data for requested stock at 1 month intervals.\n\nSource: https://github.com/andrewkvuong/SlackStockBot```'
     };
     callback(null, response);
     return;
@@ -29,6 +29,17 @@ exports.handler = (event, context, callback) => {
 
   events[0] = events[0].toUpperCase();
   // News
+  if(events[0] == '-GOOGLE')
+  {
+    let i;
+    let query = events[1];
+    for(i = 2; i < events.length; i++){
+      query = query + "+" + events[i];
+    }
+    google(query, callback);
+    return;
+  }
+  
   if (events[1] === '-news') {
     let count = 3;
     if (events[2] != '' && events[2] != null) {
@@ -341,9 +352,9 @@ function formatDate(date_string, days) {
 function getNews(stockName, count, callback) {
   var attachment_arr = [];
   // http://feeds.finance.yahoo.com/rss/2.0/headline?s=ge&region=US&lang=en-US
-  let newsURL = 'http://feeds.finance.yahoo.com/rss/2.0/headline?s=' + stockName + '&region=US&lang=en-US';
+  let newsURL = 'https://feeds.finance.yahoo.com/rss/2.0/headline?s=' + stockName + '&region=US&lang=en-US';
 
-  http.get(newsURL, (res) => {
+  https.get(newsURL, (res) => {
     console.log('statusCode:', res.statusCode);
     console.log('headers:', res.headers);
 
@@ -499,5 +510,57 @@ function getFavorites(channel_id, callback)
       };
       callback(null, response);
     });
+  });
+}
+
+function google(query, callback) {
+  console.log("Googling")
+  var attachment_arr = [];
+  let searchURL = "https://www.googleapis.com/customsearch/v1?key=[API_KEY]&cx=017719436008113027189:lmvtrueqorq&q=" + query + "&num=3" // Removed API key due to free tier usage.
+  https.get(searchURL, (res) => {
+    console.log('statusCode:', res.statusCode);
+    console.log('headers:', res.headers);
+
+    // Build data
+    var returnData = "";
+    res.on('data', (d) => {
+      returnData += d;
+    });
+
+    // Work with data
+    res.on('end', function() {
+      var data;
+      let search_data = JSON.parse(returnData);
+      
+      let i;
+      for(i = 0; i < 3; i++){
+      
+        let title = search_data['items'][i]['title']
+        let title_link = search_data['items'][i]['link']
+        let display_link = '_' + search_data['items'][i]['displayLink'] + '_'
+        let snippet = search_data['items'][i]['snippet'].replace('\n', '')
+        
+        try{
+          let thumbnail = search_data['items'][i]['pagemap']['cse_thumbnail'][0]['src']
+          let object = {fallback: title, title: title, title_link: title_link, mrkdown_in: ["text"], thumb_url: thumbnail, text: display_link + "\n" + snippet}
+          attachment_arr.push(object)
+        }
+        catch(err){
+          let object = {fallback: title, title: title, title_link: title_link, mrkdown_in: ["text"], text: display_link + "\n" + snippet}
+          attachment_arr.push(object)
+        }
+  
+        console.log("attachments_arr: ", attachment_arr.length);
+      }
+      
+      // Return response
+      const response = {
+        response_type: 'in_channel',
+        attachments: attachment_arr
+      };
+      callback(null, response);
+    });
+  }).on('error', (err) => {
+    console.log("Stock Data Request Error", err);
   });
 }
