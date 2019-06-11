@@ -7,10 +7,61 @@ const stream = require('stream');
 const uuidv4 = require('uuid/v4');
 const parseString = require('xml2js').parseString;
 const h2p = require('html2plaintext');
+var request = require('request');
+var fs = require('fs')
 
 exports.handler = (event, context, callback) => {
   // Split parameters
   var events = event.body.text.split(" ");
+  events[0] = events[0].toLowerCase();
+  if (events[0] === 'parrotlet') {
+    const response = {
+      response_type: 'in_channel',
+      attachments: [{ title: events[0], title_link: "https://media.giphy.com/media/LKc35qQgttRu0/giphy.gif", image_url: 'https://media.giphy.com/media/LKc35qQgttRu0/giphy.gif', fallback: events[0] }]
+    };
+    callback(null, response);
+    return;
+  }
+  else if (events[0] === 'parrotlet2') {
+    const response = {
+      response_type: 'in_channel',
+      attachments: [{ title: events[0], title_link: "https://media.giphy.com/media/LKc35qQgttRu0/giphy.gif", image_url: 'https://media.giphy.com/media/6RIG50yLoWYUM/giphy.gif', fallback: events[0] }]
+    };
+    callback(null, response);
+    return;
+  }
+  else if (events[0] === 'whale') {
+    const response = {
+      response_type: 'in_channel',
+      attachments: [{ title: events[0], title_link: "https://media.giphy.com/media/LKc35qQgttRu0/giphy.gif", image_url: 'https://media.giphy.com/media/121iTEUa2O49DG/giphy.gif', fallback: events[0] }]
+    };
+    callback(null, response);
+    return;
+  }
+  else if (event.body.text === 'sleeping parrotlet') {
+    const response = {
+      response_type: 'in_channel',
+      attachments: [{ title: event.body.text, title_link: "https://media.giphy.com/media/3o84TVpkrQ4bRa8VeU/giphy.gif", image_url: 'https://media.giphy.com/media/3o84TVpkrQ4bRa8VeU/giphy.gif', fallback: event.body.text }]
+    };
+    callback(null, response);
+    return;
+  }
+  else if (events[0] === 'chinchilla') {
+    const response = {
+      response_type: 'in_channel',
+      attachments: [{ title: events[0], title_link: "https://media.giphy.com/media/3o84TVpkrQ4bRa8VeU/giphy.gif", image_url: 'https://media.giphy.com/media/NLIPqilkyziF2/giphy.gif', fallback: "Required plain-text summary of the attachment." }]
+    };
+    callback(null, response);
+    return;
+  }
+  else if (events[0] === 'raccoon') {
+    const response = {
+      response_type: 'in_channel',
+      attachments: [{ title: events[0], title_link: "https://media.giphy.com/media/3oro5WAV47HEBgdZyS/giphy.gif", image_url: 'https://media.giphy.com/media/3oro5WAV47HEBgdZyS/giphy.gif', fallback: "Required plain-text summary of the attachment." }]
+    };
+    callback(null, response);
+    return;
+  }
 
   // Return if Help
   if (events[1] === '-help' || events[2] === '-help' || events[0] === '-help' || events[1] === 'help' || events[2] === 'help' || events[0] === 'help' || events[1] === '-h' || events[2] === '-h' || events[0] === '-h' || events[0] === '' || events[0] === null) {
@@ -21,7 +72,7 @@ exports.handler = (event, context, callback) => {
     // Return response
     const response = {
       response_type: vis,
-      text: '*Usage:* ```/stock [STOCKNAME] [OPTIONS]\nEX: /stock AMZN 5d -L``` *Options:* \n```-help                   Returns information on options and usage of app. \n-google [query]       Performs google search on query\n[STOCK] -T              Returns the current price and difference percentage with no chart.\n[STOCK] -C              Returns data as a candlestick chart. Default is line chart.\n[STOCK] -news [#]       Displays # news articles from Yahoo finance for given stock. # will default to 3 and maxes at 20.\n-F                      Returns daily values for channel favorite stocks.\n[STOCK] -add            Adds [STOCK] to channel favorite.\n-removeall              Removes all channel favorites\n[STOCK] -V              Returns volume for stock in last 5 minutes\n[STOCK] -daily_volume   Returns daily volume for stock.\n[STOCK] 1d              Returns 1 day of data for requested stock at 5 minute intervals. Default value.\n[STOCK] 5d              Returns 5 days of data for requested stock at 30 minute intervals.\n[STOCK] 1m              Returns 1 month of data for requested stock at 1 day intervals. \n[STOCK] 3m              Returns 3 month of data for requested stock at 1 day intervals. \n[STOCK] 6m              Returns 6 month of data for requested stock at 1 week intervals. \n[STOCK] 1y              Returns 1 year of data for requested stock at 1 week intervals. \n[STOCK] 5y              Returns 5 year of data for requested stock at 1 month intervals.\n\nSource: https://github.com/andrewkvuong/SlackStockBot```'
+      text: '*Usage:* ```/stock [STOCKNAME] [OPTIONS]\nEX: /stock AMZN 5d -L``` *Options:* \n```-help                   Returns information on options and usage of app. \n-yelp [address]\n-dict [word] \n-german [sentence] \n-japanese [sentence] \n-youtube [query] \n-google [query]       Performs google search on query\n[STOCK] -T              Returns the current price and difference percentage with no chart.\n[STOCK] -C              Returns data as a candlestick chart. Default is line chart.\n[STOCK] -news [#]       Displays # news articles from Yahoo finance for given stock. # will default to 3 and maxes at 20.\n-F                      Returns daily values for channel favorite stocks.\n[STOCK] -add            Adds [STOCK] to channel favorite.\n-removeall              Removes all channel favorites\n[STOCK] -V              Returns volume for stock in last 5 minutes\n[STOCK] -daily_volume   Returns daily volume for stock.\n[STOCK] 1d              Returns 1 day of data for requested stock at 5 minute intervals. Default value.\n[STOCK] 5d              Returns 5 days of data for requested stock at 30 minute intervals.\n[STOCK] 1m              Returns 1 month of data for requested stock at 1 day intervals. \n[STOCK] 3m              Returns 3 month of data for requested stock at 1 day intervals. \n[STOCK] 6m              Returns 6 month of data for requested stock at 1 week intervals. \n[STOCK] 1y              Returns 1 year of data for requested stock at 1 week intervals. \n[STOCK] 5y              Returns 5 year of data for requested stock at 1 month intervals.\n\nSource: https://github.com/andrewkvuong/SlackStockBot```'
     };
     callback(null, response);
     return;
@@ -29,6 +80,56 @@ exports.handler = (event, context, callback) => {
 
   events[0] = events[0].toUpperCase();
   // News
+  if(events[0] == '-YELP')
+  {
+    let offset = 0
+    let query = event.body.text.substring(events[0].length+1)
+    if(events[1].substring(0, 2) == '-p')
+    {
+      offset = Number(events[1].substring(2))*5
+      query = event.body.text.substring(events[0].length+1+events[1].length+1)
+    }
+    console.log(query)
+    yelp(query, offset, callback)
+    return;
+  }
+  if(events[0] == '-GERMAN')
+  {
+    let i = 2;
+    let flag = false;
+    if(events[1] == '-eng')
+    {
+      i = 3;
+      flag = true;
+    }
+    let query = events[i-1];
+    for(i; i < events.length; i++){
+      query = query + " " + events[i];
+    }
+    translate(query, 'de', flag, callback);
+    return;
+  }
+  if(events[0] == '-JAPANESE')
+  {
+    let i = 2;
+    let flag = false;
+    if(events[1] == '-eng')
+    {
+      i = 3;
+      flag = true;
+    }
+    let query = events[i-1];
+    for(i; i < events.length; i++){
+      query = query + " " + events[i];
+    }
+    translate(query, 'ja', flag, callback);
+    return;
+  }
+  if(events[0] == '-DICT')
+  {
+    getInflection(events[1], callback)
+    return;
+  }
   if(events[0] == '-GOOGLE')
   {
     let i;
@@ -37,6 +138,36 @@ exports.handler = (event, context, callback) => {
       query = query + "+" + events[i];
     }
     google(query, callback);
+    return;
+  }
+  
+  if(events[0] == '-POE')
+  {
+    let i = 2;
+    let league = 'Legion'
+    let query = events[1];
+    if(events[1].charAt(0) == '-')
+    {
+      league = events[1].substr(1);
+      query = events[2]
+      i = 3;
+    }
+    for(i; i < events.length; i++){
+      query = query + " " + events[i];
+    }
+    poe(query, league, callback);
+    return;
+  }
+  
+  
+  if(events[0] == '-YOUTUBE')
+  {
+    let i;
+    let query = events[1];
+    for(i = 2; i < events.length; i++){
+      query = query + "+" + events[i];
+    }
+    youtube(query, callback);
     return;
   }
   
@@ -516,7 +647,7 @@ function getFavorites(channel_id, callback)
 function google(query, callback) {
   console.log("Googling")
   var attachment_arr = [];
-  let searchURL = "https://www.googleapis.com/customsearch/v1?key=[API_KEY]&cx=017719436008113027189:lmvtrueqorq&q=" + query + "&num=3" // Removed API key due to free tier usage.
+  let searchURL = "https://www.googleapis.com/customsearch/v1?key=AIzaSyDD0UbdOU29w4oLb3x6bmJQV6kllqXjxuY&cx=017719436008113027189:lmvtrueqorq&q=" + query + "&num=3"
   https.get(searchURL, (res) => {
     console.log('statusCode:', res.statusCode);
     console.log('headers:', res.headers);
@@ -563,4 +694,338 @@ function google(query, callback) {
   }).on('error', (err) => {
     console.log("Stock Data Request Error", err);
   });
+}
+
+function youtube(query, callback) {
+  console.log("youtube")
+  var attachment_arr = [];
+  let searchURL = "https://www.googleapis.com/youtube/v3/search?key=AIzaSyDD0UbdOU29w4oLb3x6bmJQV6kllqXjxuY&part=snippet&q="+query+"&maxResults=3"
+  https.get(searchURL, (res) => {
+    console.log('statusCode:', res.statusCode);
+    console.log('headers:', res.headers);
+
+    // Build data
+    var returnData = "";
+    res.on('data', (d) => {
+      returnData += d;
+    });
+
+    // Work with data
+    res.on('end', function() {
+      var data;
+      let search_data = JSON.parse(returnData);
+      
+      let i;
+      for(i = 0; i < 3; i++){
+      
+        let title = search_data['items'][i]['snippet']['title']
+        let title_link = "https://www.youtube.com/watch?v=" + search_data['items'][i]['id']['videoId']
+        let channel = '*' + search_data['items'][i]['snippet']['channelTitle'] + '*'
+        let time = '_' + search_data['items'][i]['snippet']['publishedAt'] + '_'
+        let desc = search_data['items'][i]['snippet']['description']
+        
+        try{
+          let thumbnail = search_data['items'][i]['snippet']['thumbnails']['default']['url']
+          let object = {fallback: title, title: title, title_link: title_link, mrkdown_in: ["text"], thumb_url: thumbnail, text: channel + "\n" + time + "\n" + desc}
+          attachment_arr.push(object)
+          console.log(object)
+        }
+        catch(err){
+          let object = {fallback: title, title: title, title_link: title_link, mrkdown_in: ["text"], text: channel + "\n" + time + "\n" + desc}
+          attachment_arr.push(object)
+        }
+      }
+      
+      // Return response
+      const response = {
+        response_type: 'in_channel',
+        attachments: attachment_arr
+      };
+      callback(null, response);
+    });
+  }).on('error', (err) => {
+    console.log("Stock Data Request Error", err);
+  });
+}
+
+
+function dictionary(word, callback) {
+  console.log("dictionary")
+  var attachment_arr = [];
+  let searchURL = 'https://od-api.oxforddictionaries.com:443/api/v1/entries/en/' + word;
+  
+  var options = {
+    hostname: 'od-api.oxforddictionaries.com',
+    port: 443,
+    path: '/api/v1/entries/en/' + word,
+    method: 'GET',
+    headers: {Accept: "application/json",
+            app_id: "f817ec61",
+            app_key: "5299d2379dfb9333417b9ee002e5af5b"}
+  };
+  
+  https.get(options, (res) => {
+    console.log('statusCode:', res.statusCode);
+    console.log('headers:', res.headers);
+
+    // Build data
+    var returnData = "";
+    res.on('data', (d) => {
+      returnData += d;
+    });
+
+    // Work with data
+    res.on('end', function() {
+      //var data;
+      let data = JSON.parse(returnData);
+      //console.log(data['results'][0]['lexicalEntries'][0]['entries'][0]['senses']) // Loop lexical entries
+
+      for(var i = 0; i < data['results'][0]['lexicalEntries'].length; i++)
+      {
+         let category = data['results'][0]['lexicalEntries'][i]['lexicalCategory']
+         let def_text = ''
+         console.log(data['results'][0]['lexicalEntries'][i]['entries'][0]['senses'][0]['examples'])
+        for(var j = 0; j < data['results'][0]['lexicalEntries'][i]['entries'][0]['senses'].length; j++)
+        {
+            def_text += j+1 + '. ' + data['results'][0]['lexicalEntries'][i]['entries'][0]['senses'][j]['definitions'][0] + '\n';
+            try{
+              def_text += '_' + data['results'][0]['lexicalEntries'][i]['entries'][0]['senses'][j]['examples'][0]['text'] + '_\n';
+            }
+            catch(e)
+            {
+              console.log('no example')
+            }
+        }
+         let object = {fallback: word, title: category, mrkdown_in:["text"], text: def_text}
+         attachment_arr.push(object)
+         console.log(object)
+      }
+      
+      
+      // Return response
+      const response = {
+        response_type: 'in_channel',
+        text:'*' + word + '*',
+        attachments: attachment_arr
+      };
+      callback(null, response);
+    });
+  }).on('error', (err) => {
+    console.log("Stock Data Request Error", err);
+  });
+}
+
+function getInflection(word, callback) {
+  console.log("dictionary")
+  var attachment_arr = [];
+  let searchURL = 'https://od-api.oxforddictionaries.com:443/api/v1/inflections/en/' + word;
+  
+  var options = {
+    hostname: 'od-api.oxforddictionaries.com',
+    port: 443,
+    path: '/api/v1/inflections/en/' + word,
+    method: 'GET',
+    headers: {Accept: "application/json",
+            app_id: "f817ec61",
+            app_key: "5299d2379dfb9333417b9ee002e5af5b"}
+  };
+  
+  https.get(options, (res) => {
+    console.log('statusCode:', res.statusCode);
+    console.log('headers:', res.headers);
+
+    // Build data
+    var returnData = "";
+    res.on('data', (d) => {
+      returnData += d;
+    });
+
+    // Work with data
+    res.on('end', function() {
+      //var data;
+      let data = JSON.parse(returnData);
+      //console.log(data['results'][0]['lexicalEntries'][0]['entries'][0]['senses']) // Loop lexical entries
+      console.log(data['results'][0]['lexicalEntries'][0]['inflectionOf'][0]['text'])
+      dictionary(data['results'][0]['lexicalEntries'][0]['inflectionOf'][0]['text'], callback)
+      
+    });
+  }).on('error', (err) => {
+    console.log("Stock Data Request Error", err);
+  });
+}
+
+function translate(query, language, flag, callback) {
+  var attachment_arr = [];
+  let searchURL = 'https://api.mymemory.translated.net/get?q='+query+'&langpair=en|'+language;
+  if(flag)
+    searchURL = 'https://api.mymemory.translated.net/get?q='+query+'&langpair='+language+'|en';
+  https.get(searchURL, (res) => {
+    console.log('statusCode:', res.statusCode);
+    console.log('headers:', res.headers);
+
+    // Build data
+    var returnData = "";
+    res.on('data', (d) => {
+      returnData += d;
+    });
+
+    // Work with data
+    res.on('end', function() {
+      var data;
+      let search_data = JSON.parse(returnData);
+      
+      console.log(search_data['responseData']['translatedText'])
+      let translated = search_data['responseData']['translatedText']
+      let object = {fallback: translated, title: query, mrkdown_in: ["text"], text: translated}
+      attachment_arr.push(object)
+      
+      // Return response
+      const response = {
+        response_type: 'in_channel',
+        attachments: attachment_arr
+      };
+      callback(null, response);
+    });
+  }).on('error', (err) => {
+    console.log("Stock Data Request Error", err);
+  });
+}
+
+function yelp(query, offset, callback) {
+  var attachment_arr = [];
+  let searchURL = 'https://api.yelp.com/v3/businesses/search?term=restaurant&location='+query+'&sort_by=review_count&limit=5&offset=' + offset
+  query = encodeURI(query)
+    console.log(query)
+  
+    var options = {
+    hostname: 'api.yelp.com',
+    port: 443,
+    path: '/v3/businesses/search?term=restaurant&location='+query+'&sort_by=review_count&limit=5&offset=' + offset,
+    method: 'GET',
+    headers: {Authorization: "Bearer tG8HN_dsRtC-jVV_Tik2x-k_etZ4vQAR9PytnOxtknmIps1Jd9QCf3SJmMpMzszeuUdgMoZQf_AiMhahsgePHmLxVchoJaS4J4Zo9vlvNjL47PBHMte0ltYOORCdXHYx"}
+  };
+  
+  https.get(options, (res) => {
+
+    // Build data
+    var returnData = "";
+    res.on('data', (d) => {
+      returnData += d;
+    });
+
+    // Work with data
+    res.on('end', function() {
+      var data;
+      let search_data = JSON.parse(returnData);
+      
+      console.log(search_data['businesses'][0])
+      for(let i = 0; i < search_data['businesses'].length; i++)
+      {
+        let reviews = search_data['businesses'][i]['review_count']
+        let categories = ""
+        for(let j = 0; j < search_data['businesses'][i]['categories'].length; j++)
+        {
+          categories += search_data['businesses'][i]['categories'][j]['title'] + " "
+        }
+        let location = search_data['businesses'][i]['location']['display_address']
+        let rating = search_data['businesses'][i]['rating']
+        let final_text = '_' + location.toString() + '_\n_' + categories + '_\n' + 'Reviews: ' + reviews + '\nRating: ' + rating + '\n'
+        let object = {fallback: search_data['businesses'][i]['name'], title: search_data['businesses'][i]['name'], title_link: search_data['businesses'][i]['url'], mrkdown_in: ["text"], thumb_url: search_data['businesses'][i]['image_url'], text: final_text}
+        attachment_arr.push(object)
+      }
+      
+      // Return response
+      const response = {
+        response_type: 'in_channel',
+        attachments: attachment_arr
+      };
+      callback(null, response);
+    });
+  }).on('error', (err) => {
+    console.log("Stock Data Request Error", err);
+  });
+}
+
+function poe(query, league, callback) {
+  console.log("poe")
+  console.log(query)
+  var obj;
+  try {
+    obj = JSON.parse(fs.readFileSync('formatted_itemdata', 'utf8'));
+    console.log(obj[query.toLowerCase()])
+    query = obj[query.toLowerCase()];
+    query_ = query.replace(/ /g,"_");
+  }
+  catch (e)
+  {
+    const response = {
+      response_type: 'in_channel',
+      text: "Item does not exist or was not found :("
+    };
+    callback(null, response);
+    return;
+  }
+  request.post(
+    'https://www.pathofexile.com/api/trade/search/' + league,
+    { json: { query: { status: { option: "online"}, name: query}, sort: { price: "asc"} } },
+    function (error, response, body) {
+        if (!error && response.statusCode == 200) {
+            console.log(body);
+
+            var attachment_arr = [];
+            let searchURL = 'https://www.pathofexile.com/api/trade/fetch/' + body.result[0] + ',' + body.result[1] + "?query=" +  body.id;
+            console.log(searchURL);
+            https.get(searchURL, (res) => {
+              console.log('statusCode:', res.statusCode);
+              console.log('headers:', res.headers);
+          
+              // Build data
+              var returnData = "";
+              res.on('data', (d) => {
+                returnData += d;
+              });
+          
+              // Work with data
+              res.on('end', function() {
+                var data;
+                let search_data = JSON.parse(returnData);
+                let object = {fallback: query, title: query, title_link: "https://pathofexile.gamepedia.com/" + query_}
+                attachment_arr.push(object)
+
+                let stats = "`" + "ilvl " + search_data["result"][0]["item"]["ilvl"] + "`\n";
+                try{
+                  for(var s in search_data["result"][0]["item"]["implicitMods"])
+                  {
+                    stats += "`" + search_data["result"][0]["item"]["implicitMods"][s] + "`" + "\n"
+                  }
+                  stats += "`-------------------------------`"
+                  stats += "\n"
+                }
+                catch(e)
+                {
+                }
+                for(var s in search_data["result"][0]["item"]["explicitMods"])
+                {
+                  stats += "`" + search_data["result"][0]["item"]["explicitMods"][s] + "`" + "\n"
+                }
+                console.log(search_data["result"][0])
+                console.log(search_data["result"][0]["listing"])
+                object = {fallback: search_data["result"][0]["listing"]["price"]["type"] + " " + search_data["result"][0]["listing"]["price"]["amount"] + " " + search_data["result"][0]["listing"]["price"]["currency"], title: search_data["result"][0]["listing"]["price"]["type"] + " " + search_data["result"][0]["listing"]["price"]["amount"] + " " + search_data["result"][0]["listing"]["price"]["currency"], mrkdown_in: ["text"], thumb_url: search_data["result"][0]["item"]["icon"], text: stats + '\n' + search_data["result"][0]["listing"]["whisper"]}
+                attachment_arr.push(object)
+                // Return response
+                const response = {
+                  response_type: 'in_channel',
+                  attachments: attachment_arr
+                };
+                callback(null, response);
+              });
+            }).on('error', (err) => {
+              console.log("Stock Data Request Error", err);
+            });
+        }
+        else{
+          console.log(error, response.statusCode)
+        }
+    }
+  );
 }

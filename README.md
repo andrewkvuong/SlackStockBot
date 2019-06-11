@@ -55,4 +55,8 @@ Returns data as a candlestick chart. Default is line chart.
 ```Returns 5 year of data for requested stock at 1 month intervals.```
 
 
+MEMES:
+Lots of random APIs added in here for fun like Yelp, Google searches, Youtube, Poe, Dictionary, etc.
+***Contains lots of free trial API keys***
+
 ![Alt Text](https://github.com/andrewkvuong/SlackStockBot/blob/master/example.gif)
